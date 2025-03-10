@@ -28,11 +28,11 @@ import { ref } from "vue";
 import DataTablePagination from "./DataTablePagination.vue";
 import DataTableToolbar from "./DataTableToolbar.vue";
 import { valueUpdater } from "~/lib/utils";
-import type { Task } from "~/data/schema";
+import type { Photo } from "~/data/schema";
 
 interface DataTableProps {
-  columns: ColumnDef<Task, any>[];
-  data: Task[];
+  columns: ColumnDef<Photo, any>[];
+  data: Photo[];
 }
 const props = defineProps<DataTableProps>();
 
@@ -80,47 +80,58 @@ const table = useVueTable({
 </script>
 
 <template>
-  <div class="space-y-4">
+  <div class="space-y-4 max-w-[600px]">
     <DataTableToolbar :table="table" />
-    <div class="rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow
+
+    <div class="rounded-md border max-h-[600px] overflow-auto relative">
+      <table class="border-collapse">
+        <thead class="sticky top-0 bg-secondary z-10">
+          <tr
             v-for="headerGroup in table.getHeaderGroups()"
             :key="headerGroup.id"
           >
-            <TableHead v-for="header in headerGroup.headers" :key="header.id">
+            <th
+              v-for="header in headerGroup.headers"
+              :key="header.id"
+              class="px-1 text-center text-xs font-medium bg-secondary"
+            >
               <FlexRender
                 v-if="!header.isPlaceholder"
                 :render="header.column.columnDef.header"
                 :props="header.getContext()"
               />
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
           <template v-if="table.getRowModel().rows?.length">
-            <TableRow
+            <tr
               v-for="row in table.getRowModel().rows"
               :key="row.id"
               :data-state="row.getIsSelected() && 'selected'"
+              class="border-t"
             >
-              <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
+              <td
+                v-for="cell in row.getVisibleCells()"
+                :key="cell.id"
+                class="px-2 py-2"
+              >
                 <FlexRender
                   :render="cell.column.columnDef.cell"
                   :props="cell.getContext()"
                 />
-              </TableCell>
-            </TableRow>
+              </td>
+            </tr>
           </template>
 
-          <TableRow v-else>
-            <TableCell :colspan="columns.length" class="h-24 text-center">
+          <tr v-else>
+            <td :colspan="columns.length" class="h-24 text-center">
               No results.
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <DataTablePagination :table="table" />

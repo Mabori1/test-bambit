@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Table } from "@tanstack/vue-table";
-import type { Task } from "../data/schema";
+import type { Photo } from "../data/schema";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -15,7 +15,7 @@ import { computed } from "vue";
 import { SlidersHorizontal } from "lucide-vue-next";
 
 interface DataTableViewOptionsProps {
-  table: Table<Task>;
+  table: Table<Photo>;
 }
 
 const props = defineProps<DataTableViewOptionsProps>();

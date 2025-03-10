@@ -1,106 +1,64 @@
 import type { ColumnDef } from "@tanstack/vue-table";
-import type { Task } from "../data/schema";
+import type { Photo } from "../data/schema";
 
-import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
 import { h } from "vue";
-import { labels, priorities, statuses } from "../data/data";
 import DataTableColumnHeader from "./DataTableColumnHeader.vue";
-import DataTableRowActions from "./DataTableRowActions.vue";
+import DataTableCellTooltip from "./DataTableCellTooltip.vue";
 
-export const columns: ColumnDef<Task>[] = [
+export const columns: ColumnDef<Photo>[] = [
   {
-    id: "select",
-    header: ({ table }) =>
-      h(Checkbox, {
-        modelValue:
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate"),
-        "onUpdate:modelValue": (value) =>
-          table.toggleAllPageRowsSelected(!!value),
-        ariaLabel: "Select all",
-        class: "translate-y-0.5",
-      }),
-    cell: ({ row }) =>
-      h(Checkbox, {
-        modelValue: row.getIsSelected(),
-        "onUpdate:modelValue": (value) => row.toggleSelected(!!value),
-        ariaLabel: "Select row",
-        class: "translate-y-0.5",
-      }),
+    accessorKey: "id",
+    header: ({ column }) => h(DataTableColumnHeader, { column, title: "Ид" }),
+    cell: ({ row }) => h("p", { class: "w-[22px]" }, row.getValue("id")),
     enableSorting: false,
     enableHiding: false,
   },
   {
-    accessorKey: "id",
-    header: ({ column }) => h(DataTableColumnHeader, { column, title: "Task" }),
-    cell: ({ row }) => h("div", { class: "w-20" }, row.getValue("id")),
+    accessorKey: "albumId",
+    header: ({ column }) =>
+      h(DataTableColumnHeader, { column, title: "Альбом" }),
+    cell: ({ row }) => h("p", { class: "w-[22px]" }, row.getValue("albumId")),
     enableSorting: false,
     enableHiding: false,
   },
   {
     accessorKey: "title",
     header: ({ column }) =>
-      h(DataTableColumnHeader, { column, title: "Title" }),
+      h(DataTableColumnHeader, {
+        column,
+        title: "Название",
+      }),
 
     cell: ({ row }) => {
-      const label = labels.find((label) => label.value === row.original.label);
-
-      return h("div", { class: "flex space-x-2" }, [
-        label ? h(Badge, { variant: "outline" }, () => label.label) : null,
-        h(
-          "span",
-          { class: "max-w-[500px] truncate font-medium" },
-          row.getValue("title"),
-        ),
-      ]);
+      return h(DataTableCellTooltip, {
+        title: row.getValue("title") as string,
+        class: "max-w-[150px] truncate font-medium",
+      });
     },
   },
   {
-    accessorKey: "status",
+    accessorKey: "url",
     header: ({ column }) =>
-      h(DataTableColumnHeader, { column, title: "Status" }),
+      h(DataTableColumnHeader, { column, title: "Ссылка" }),
 
     cell: ({ row }) => {
-      const status = statuses.find(
-        (status) => status.value === row.getValue("status"),
-      );
-
-      if (!status) return null;
-
-      return h("div", { class: "flex w-[100px] items-center" }, [
-        status.icon &&
-          h(status.icon, { class: "mr-2 h-4 w-4 text-muted-foreground" }),
-        h("span", status.label),
-      ]);
-    },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
+      return h(DataTableCellTooltip, {
+        title: row.getValue("url") as string,
+        class: "max-w-[140px]  font-medium",
+      });
     },
   },
+
   {
-    accessorKey: "priority",
+    accessorKey: "thumbnailUrl",
     header: ({ column }) =>
-      h(DataTableColumnHeader, { column, title: "Priority" }),
+      h(DataTableColumnHeader, { column, title: "Миниатюра" }),
+
     cell: ({ row }) => {
-      const priority = priorities.find(
-        (priority) => priority.value === row.getValue("priority"),
-      );
-
-      if (!priority) return null;
-
-      return h("div", { class: "flex items-center" }, [
-        priority.icon &&
-          h(priority.icon, { class: "mr-2 h-4 w-4 text-muted-foreground" }),
-        h("span", {}, priority.label),
-      ]);
+      return h(DataTableCellTooltip, {
+        title: row.getValue("thumbnailUrl") as string,
+        class: "max-w-[140px] truncate font-medium",
+      });
     },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
-    },
-  },
-  {
-    id: "actions",
-    cell: ({ row }) => h(DataTableRowActions, { row }),
   },
 ];

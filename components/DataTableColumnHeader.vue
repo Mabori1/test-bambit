@@ -9,12 +9,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import type { Column } from "@tanstack/vue-table";
-import type { Task } from "../data/schema";
+import type { Photo } from "../data/schema";
 
 import { ArrowDown, ArrowDownUp, ArrowUpIcon, EyeOff } from "lucide-vue-next";
 
 interface DataTableColumnHeaderProps {
-  column: Column<Task, any>;
+  column: Column<Photo, any>;
   title: string;
 }
 
@@ -30,7 +30,7 @@ export default {
 <template>
   <div
     v-if="column.getCanSort()"
-    :class="cn('flex items-center space-x-2', $attrs.class ?? '')"
+    :class="cn('flex items-center space-x-2 sticky top-0', $attrs.class ?? '')"
   >
     <DropdownMenu>
       <DropdownMenuTrigger as-child>

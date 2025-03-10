@@ -1,32 +1,15 @@
 <script setup lang="ts">
-import type { Row } from "@tanstack/vue-table";
-import type { Task } from "../data/schema";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { computed } from "vue";
 
-import { labels } from "../data/data";
-import { taskSchema } from "../data/schema";
 import { EllipsisVertical } from "lucide-vue-next";
-
-interface DataTableRowActionsProps {
-  row: Row<Task>;
-}
-const props = defineProps<DataTableRowActionsProps>();
-
-const task = computed(() => taskSchema.parse(props.row.original));
 </script>
 
 <template>
@@ -44,21 +27,6 @@ const task = computed(() => taskSchema.parse(props.row.original));
       <DropdownMenuItem>Edit</DropdownMenuItem>
       <DropdownMenuItem>Make a copy</DropdownMenuItem>
       <DropdownMenuItem>Favorite</DropdownMenuItem>
-      <DropdownMenuSeparator />
-      <DropdownMenuSub>
-        <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
-        <DropdownMenuSubContent>
-          <DropdownMenuRadioGroup :value="task.label">
-            <DropdownMenuRadioItem
-              v-for="label in labels"
-              :key="label.value"
-              :value="label.value"
-            >
-              {{ label.label }}
-            </DropdownMenuRadioItem>
-          </DropdownMenuRadioGroup>
-        </DropdownMenuSubContent>
-      </DropdownMenuSub>
       <DropdownMenuSeparator />
       <DropdownMenuItem>
         Delete

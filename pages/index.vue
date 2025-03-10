@@ -2,7 +2,15 @@
 import { columns } from "@/components/columns";
 import DataTable from "@/components/DataTable.vue";
 import UserNav from "@/components/UserNav.vue";
-import tasks from "@/data/tasks.json";
+import { photosData } from "~/data/get-photos";
+import type { Photo } from "~/data/schema";
+
+const photos = ref<Photo[]>([]);
+
+onMounted(async () => {
+  // photos.value = await getPhotos();
+  photos.value = photosData;
+});
 </script>
 
 <template>
@@ -18,6 +26,8 @@ import tasks from "@/data/tasks.json";
         <UserNav />
       </div>
     </div>
-    <DataTable :data="tasks" :columns="columns" />
+    <div class="flex justify-center">
+      <DataTable :data="photos" :columns="columns" />
+    </div>
   </div>
 </template>

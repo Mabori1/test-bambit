@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Table } from "@tanstack/vue-table";
-import type { Task } from "../data/schema";
+import type { Photo } from "../data/schema";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -17,23 +17,25 @@ import {
 } from "lucide-vue-next";
 
 interface DataTablePaginationProps {
-  table: Table<Task>;
+  table: Table<Photo>;
 }
-defineProps<DataTablePaginationProps>();
+const props = defineProps<DataTablePaginationProps>();
+onMounted(() => {
+  props.table.setPageSize(30);
+});
 </script>
 
 <template>
   <div class="flex items-center justify-between px-2">
     <div class="flex-1 text-sm text-muted-foreground">
-      {{ table.getFilteredSelectedRowModel().rows.length }} of
-      {{ table.getFilteredRowModel().rows.length }} row(s) selected.
+      {{ table.getFilteredRowModel().rows.length }} row(s)
     </div>
     <div class="flex items-center space-x-6 lg:space-x-8">
       <div class="flex items-center space-x-2">
         <p class="text-sm font-medium">Rows per page</p>
         <Select
           :model-value="`${table.getState().pagination.pageSize}`"
-          @update:model-value="table.setPageSize ?? 30"
+          @update:model-value="table.setPageSize($event ? +$event : 30)"
         >
           <SelectTrigger class="h-8 w-[70px]">
             <SelectValue
