@@ -32,7 +32,7 @@ export const columns: ColumnDef<Photo>[] = [
     cell: ({ row }) => {
       return h(DataTableCellTooltip, {
         title: row.getValue("title") as string,
-        class: "max-w-[150px] truncate font-medium",
+        class: "max-w-[140px] truncate font-medium",
       });
     },
   },

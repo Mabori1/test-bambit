@@ -16,7 +16,34 @@ export const getPhotos = async (): Promise<Photo[]> => {
   }
 };
 
-export const photosData = [
+export const fetchByAlbumIdPhotos = async (str: string) => {
+  let url = "https://jsonplaceholder.typicode.com/photos";
+
+  if (str.trim()) {
+    const albumIds = str
+      .trim()
+      .split(" ")
+      .map((id) => `albumId=${id.trim()}`)
+      .join("&");
+
+    url += `?${albumIds}`;
+  }
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const dataPhotos: Photo[] = await response.json();
+
+    return dataPhotos;
+  } catch (error) {
+    console.error("Error fetching filtered photos:", error);
+    return [];
+  }
+};
+
+export const photosMocks = [
   {
     albumId: 1,
     id: 1,

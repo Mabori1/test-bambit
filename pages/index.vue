@@ -1,33 +1,29 @@
 <script setup lang="ts">
+import { usePhotosStore } from "#imports";
 import { columns } from "@/components/columns";
 import DataTable from "@/components/DataTable.vue";
-import UserNav from "@/components/UserNav.vue";
-import { photosData } from "~/data/get-photos";
-import type { Photo } from "~/data/schema";
 
-const photos = ref<Photo[]>([]);
+const store = usePhotosStore();
+const { photos } = storeToRefs(store);
 
 onMounted(async () => {
-  // photos.value = await getPhotos();
-  photos.value = photosData;
+  await store.fetchAllPhotos();
+
+  if (!photos.value.length) {
+    let attempts = 0;
+    setInterval(() => {
+      store.fetchAllPhotos();
+      attempts++;
+      if (attempts >= 5) {
+        return;
+      }
+    }, 5000);
+  }
 });
 </script>
 
 <template>
-  <div class="h-full flex-1 flex-col space-y-8 p-8 md:flex">
-    <div class="flex items-center justify-between space-y-2">
-      <div>
-        <h2 class="text-2xl font-bold tracking-tight">Welcome back!</h2>
-        <p class="text-muted-foreground">
-          Here's a list of your tasks for this month!
-        </p>
-      </div>
-      <div class="flex items-center space-x-2">
-        <UserNav />
-      </div>
-    </div>
-    <div class="flex justify-center">
-      <DataTable :data="photos" :columns="columns" />
-    </div>
+  <div class="flex justify-center">
+    <DataTable :data="photos" :columns="columns" />
   </div>
 </template>

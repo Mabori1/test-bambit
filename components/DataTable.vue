@@ -7,14 +7,6 @@ import type {
 } from "@tanstack/vue-table";
 
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
   FlexRender,
   getCoreRowModel,
   getFacetedRowModel,
@@ -25,10 +17,10 @@ import {
   useVueTable,
 } from "@tanstack/vue-table";
 import { ref } from "vue";
+import type { Photo } from "~/data/schema";
+import { valueUpdater } from "~/lib/utils";
 import DataTablePagination from "./DataTablePagination.vue";
 import DataTableToolbar from "./DataTableToolbar.vue";
-import { valueUpdater } from "~/lib/utils";
-import type { Photo } from "~/data/schema";
 
 interface DataTableProps {
   columns: ColumnDef<Photo, any>[];
@@ -39,7 +31,6 @@ const props = defineProps<DataTableProps>();
 const sorting = ref<SortingState>([]);
 const columnFilters = ref<ColumnFiltersState>([]);
 const columnVisibility = ref<VisibilityState>({});
-const rowSelection = ref({});
 
 const table = useVueTable({
   get data() {
@@ -58,9 +49,6 @@ const table = useVueTable({
     get columnVisibility() {
       return columnVisibility.value;
     },
-    get rowSelection() {
-      return rowSelection.value;
-    },
   },
   enableRowSelection: true,
   onSortingChange: (updaterOrValue) => valueUpdater(updaterOrValue, sorting),
@@ -68,8 +56,6 @@ const table = useVueTable({
     valueUpdater(updaterOrValue, columnFilters),
   onColumnVisibilityChange: (updaterOrValue) =>
     valueUpdater(updaterOrValue, columnVisibility),
-  onRowSelectionChange: (updaterOrValue) =>
-    valueUpdater(updaterOrValue, rowSelection),
   getCoreRowModel: getCoreRowModel(),
   getFilteredRowModel: getFilteredRowModel(),
   getPaginationRowModel: getPaginationRowModel(),
@@ -93,7 +79,7 @@ const table = useVueTable({
             <th
               v-for="header in headerGroup.headers"
               :key="header.id"
-              class="px-1 text-center text-xs font-medium bg-secondary"
+              class="px-2 py-2 text-center text-xs font-medium bg-secondary"
             >
               <FlexRender
                 v-if="!header.isPlaceholder"
